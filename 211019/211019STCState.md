@@ -9,8 +9,8 @@ stcStateList = [
     // STC의 모듈 상태 정보 표시
     // state code 테이블 값 참고
     errorFlag: {
-      sdCard: false,
-      RTC: false,
+      sdCard: undefined,
+      RTC: undefined,
     },
     // 기본 값 : false
     // 10초 주기로 mqtt heartbeat 메시지 수신 후 true로 변경
