@@ -6,10 +6,14 @@
 - MEGA에서 사용자 입력이나 시스템 이벤트 발생시 해당 이벤트 정보[./211018SystemEvent]를 보낸다.
 - MQTT topic state/{stc id}로 메시지를 발행한다.
 
-# STC-ESP32 구현 내용
-- STC-MEGA에서 사용하는 system_info_t의 내용 중 상태와 관련된 구조체를 사용하여 STC-MEGA에서 해당 구조체 값을 변경할 경우 이를 시리얼 통신으로 ESP32에서 알려 동기화를 한다.
-- STC-ESP32에서는 일정 주기마다 system_info_t 에서 상태 정보를 읽어서 이를 전송한다.
-- STC-ESP32에서 system_info_t 값의 변경을 시리얼 통신으로 알림을 받아서 변경되는 즉시 이를 전송한다.
+# STCWMS와 STC간 모듈 상태 정보 동기화 방법
+- STCWMS에서 일정 주기마다 request/{stc_id}로 mqtt 메시지를 발행한다.
+- ESP32-STC에서 request/{stc_id}를 통해 STCWMS의 상태 정보 요청 메시지를 수신한다.
+- ESP32-STC에서 MEGA로 ESP32_REQUEST_STATE 시리얼 요청을 보낸다.
+- MEGA에서 시리얼 통신으로 ESP32_REQUEST_STATE 메시지를 받으면 RTC 모듈과 SD CARD 모듈의 상태 정보를 MEGA_SEND_SYSTEM_STATE로 시리얼통신을 통해 해당 모듈의 정보를 보낸다.
+- ESP32-STC에서 시리얼 통신으로 MEGA_SEND_SYSTEM_STATE로 모듈의 정보를 받으면 정보를 해석하고 MQTT 메시지를 생성한다.
+- ESP32-STC에서 state MQTT 토픽으로 모듈 상태 메시지를 발생한다.
+-  
 
 # struct type system_info_t  
 ```c
